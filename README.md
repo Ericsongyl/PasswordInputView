@@ -1,8 +1,6 @@
 # PasswordInputView
 Android自定义密码输入框
 
-Welcome to the PasswordInputView wiki!
-
 # What's passwordInputView?
 PasswordInputView is a custom view for inputing password like that aliPay or wechatPay view.
 
