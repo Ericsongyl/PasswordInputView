@@ -17,6 +17,9 @@
         android:background="@null"
         android:cursorVisible="false"
         android:inputType="number"
-        android:maxLength="6"/>
+        app:passwordLength="6"
+        app:borderWidth="2dp"
+        app:passwordWidth="6dp"
+        app:passwordColor="#ffff0000"/>
 
 </RelativeLayout>

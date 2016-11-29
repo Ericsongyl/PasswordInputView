@@ -1,5 +1,6 @@
 package com.nicksong.passwordinputview;
 
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -8,18 +9,18 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.EditText;
 
 @SuppressLint("DrawAllocation")
 public class PasswordInputView extends EditText{
 	
-	private int passwordLength;
-	private float borderWidth;
-	private float borderRadius; //边框四个角的角度
-	private int borderColor;
-	private float passwordWidth;
-	private int passwordColor;
+	private int passwordLength = 6;
+	private int borderWidth = 8; //px
+	private int borderRadius = 6; //边框四个角的角度px
+	private int borderColor = 0xff333333;
+	private int passwordWidth = 12; //px
+	private int passwordColor = 0xff000000;
+	private int defaultSplitLineWidth = 3; //px
 	
 	private Paint borderPaint;
 	private Paint passwordPaint;
@@ -40,14 +41,14 @@ public class PasswordInputView extends EditText{
 	}
 	
 	private void init(Context context, AttributeSet attr) {
-		TypedArray ta = context.getTheme().obtainStyledAttributes(attr, R.styleable.Passwordinputview, 0, 0);
+		TypedArray ta = context.obtainStyledAttributes(attr, R.styleable.Passwordinputview);
 		try {
-			passwordLength = ta.getInt(R.styleable.Passwordinputview_passwordLength, 6);
-			borderWidth = ta.getFloat(R.styleable.Passwordinputview_borderWidth, getResources().getDimension(R.dimen.dimen_1));
-			borderRadius = ta.getFloat(R.styleable.Passwordinputview_borderRadius, getResources().getDimension(R.dimen.dimen_3));
-			borderColor = ta.getColor(R.styleable.Passwordinputview_borderColor, getResources().getColor(R.color.color_black2));
-			passwordWidth = ta.getDimension(R.styleable.Passwordinputview_passwordWidth, getResources().getDimension(R.dimen.dimen_6));
-			passwordColor = ta.getColor(R.styleable.Passwordinputview_passwordColor, getResources().getColor(R.color.color_black));
+			passwordLength = ta.getInt(R.styleable.Passwordinputview_passwordLength, passwordLength);
+			borderWidth = ta.getDimensionPixelSize(R.styleable.Passwordinputview_borderWidth, borderWidth);
+			borderRadius = ta.getDimensionPixelSize(R.styleable.Passwordinputview_borderRadius, borderRadius);
+			borderColor = ta.getColor(R.styleable.Passwordinputview_borderColor, borderColor);
+			passwordWidth = ta.getDimensionPixelSize(R.styleable.Passwordinputview_passwordWidth, passwordWidth);
+			passwordColor = ta.getColor(R.styleable.Passwordinputview_passwordColor, passwordColor);
 		} catch (Exception e) {
 			
 		}
@@ -84,6 +85,7 @@ public class PasswordInputView extends EditText{
 		
 		//画分割线:分割线数量比密码数少1
 		borderPaint.setColor(borderColor);
+		borderPaint.setStrokeWidth(defaultSplitLineWidth);
 		for (int i = 1; i < passwordLength; i++) {
 			float x = width * i / passwordLength;
 			canvas.drawLine(x, 0, x, height, borderPaint);
@@ -109,12 +111,26 @@ public class PasswordInputView extends EditText{
 	}
 	
 	public void onInputFinished(CharSequence text) {
-		if (text != null && text.length() == 6) {
+		if (text != null) {
 			originText = text.toString();
-			onFinishListener.setOnPasswordFinished();
+			if (onFinishListener != null) {
+				onFinishListener.setOnPasswordFinished();
+			}
 		}
 	}
 	
+	/**
+	 * 获取密码最大长度
+	 * @return
+	 */
+	public int getMaxPasswordLength() {
+		return passwordLength;
+	}
+	
+	/**
+	 * 获取原始密码字符串
+	 * @return
+	 */
 	public String getOriginText() {
 		return originText;
 	}
@@ -129,22 +145,22 @@ public class PasswordInputView extends EditText{
 
     public void setPasswordLength(int passwordLength) {
         this.passwordLength = passwordLength;
-        invalidate();
+        postInvalidate();
     }
 	
-	public void setBorderWidth(float borderWidth) {
+	public void setBorderWidth(int borderWidth) {
 		this.borderWidth = borderWidth;
 		borderPaint.setStrokeWidth(borderWidth);
-		invalidate();
+		postInvalidate();
 	}
 	
 	public float getBorderWidth() {
 		return borderWidth;
 	}
 	
-	public void setBorderRadius(float borderRadius) {
+	public void setBorderRadius(int borderRadius) {
 		this.borderRadius = borderRadius;
-		invalidate();
+		postInvalidate();
 	}
 	
 	public float getBorderRadius() {
@@ -154,17 +170,17 @@ public class PasswordInputView extends EditText{
 	public void setBorderColor(int borderColor) {
 		this.borderColor = borderColor;
 		borderPaint.setColor(borderColor);
-//		invalidate();
+		postInvalidate();
 	}
 	
 	public int getBorderColor() {
 		return borderColor;
 	}
 	
-	public void setPasswordWidth(float passwordWidth) {
+	public void setPasswordWidth(int passwordWidth) {
 		this.passwordWidth = passwordWidth;
 		passwordPaint.setStrokeWidth(passwordWidth);
-//		invalidate();
+		postInvalidate();
 	}
 	
 	public float getPasswordWidth() {
@@ -174,7 +190,7 @@ public class PasswordInputView extends EditText{
 	public void setPasswordColor(int passwordColor) {
 		this.passwordColor = passwordColor;
 		passwordPaint.setColor(passwordColor);
-//		invalidate();
+		postInvalidate();
 	}
 	
 	public int getPasswordColor() {

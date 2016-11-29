@@ -37,7 +37,9 @@ public class MainActivity extends Activity implements OnFinishListener{
 	@Override
 	public void setOnPasswordFinished() {
 		// TODO Auto-generated method stub
-		Toast.makeText(this, "密码为" + passwordView.getOriginText(), Toast.LENGTH_LONG).show();
+		if (passwordView.getOriginText().length() == passwordView.getMaxPasswordLength()) {
+			Toast.makeText(this, "密码为" + passwordView.getOriginText(), Toast.LENGTH_LONG).show();
+		}
 	}
 
 }
